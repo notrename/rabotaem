@@ -4,16 +4,16 @@
     склонируйте репозиторий,
     выберите python 3.11 в качестве интерпритатора.
     и установите следующие библиотеки:    
-        1. allure-pytest  
-        2. selenium  
-        3. pytest  
-        4. requests    
+        1. allure-pytest,  
+        2. selenium, 
+        3. pytest,  
+        4. requests,    
     каждый создайте файл .gitignore и укажите в нём следующие строки:  
-        *.iml   
-        __pycache__    
-        *.xml    
-        allure-results    
-        logs.log      
+       - *.iml   
+       - __pycache__    
+       - *.xml    
+       - allure-results    
+       - logs.log      
     затем с помощью IDE или консольного гита сместитесь каждый на свою ветку:
         - Влад: vlad_first  
         - Сева: seva_first    
