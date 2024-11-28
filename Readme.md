@@ -13,7 +13,7 @@
        - __pycache__    
        - *.xml    
        - allure-results    
-       - logs.log      
+       - *.log      
     затем с помощью IDE или консольного гита сместитесь каждый на свою ветку:
         - Влад: vlad_first  
         - Сева: seva_first    
