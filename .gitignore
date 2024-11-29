@@ -1,0 +1,7 @@
+*.iml
+pycache
+*.xml
+allure-results
+*.log\
+.idea
+.__pycache__
