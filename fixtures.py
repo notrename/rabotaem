@@ -5,7 +5,3 @@ from conftest import browser
 @pytest.fixture
 def okko_web_page(browser: webdriver) -> OkkoPage:
     return OkkoPage(driver=browser)
-
-@pytest.fixture
-def avito_web_page(browser: webdriver) -> AvitoPage:
-    return AvitoPage(driver=browser)
