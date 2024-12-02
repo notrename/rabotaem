@@ -52,34 +52,37 @@ class Page:
                 return False
             raise NoSuchElementException(f'Xpath: {xpath} не найден')
 
-    def click_element(self, xpath: str, timeout: int = 2) -> bool:
-        self.logger.info(f'Попытка кликнуть по элементу по xpath\'y: {xpath}')
+    def element_is_visible(self, xpath: str, timeout: int = 2) -> bool:
+        """
+        Проверка, виден ли элемент на странице в течение заданного времени.
+        """
+        self.logger.info(f'Попытка проверить видимость элемента по xpath: {xpath}')
         try:
-            element = WebDriverWait(self.__driver, timeout).until(
-                EC.element_to_be_clickable((By.XPATH, xpath))
+            WebDriverWait(self.__driver, timeout).until(
+                EC.visibility_of_element_located((By.XPATH, xpath))
             )
-            element.click()
-            self.logger.info(f'Клик по элементу {xpath} выполнен успешно')
+            self.logger.info(f'Элемент {xpath} видим на странице')
             return True
-        except (TimeoutException, ElementClickInterceptedException) as e:
-            self.logger.error(f'Не удалось кликнуть по элементу {xpath}: {e}')
+        except TimeoutException as e:
+            self.logger.error(f'Элемент {xpath} не стал видимым за {timeout} секунд: {e}')
             return False
         except NoSuchElementException as e:
             self.logger.error(f'Элемент не найден по xpath {xpath}: {e}')
             return False
-        except StaleElementReferenceException as e:
-            self.logger.error(f'Ссылка на элемент устарела при попытке кликнуть по {xpath}: {e}')
-            return False
 
-    def element_is_clickable(self, xpath: str, timeout: int = 2) -> bool:
-        self.logger.info(f'Попытка кликнуть по элементу {xpath}')
+    def send_keys_to_input(self, xpath: str, text: str, timeout: int = 2) -> bool:
+        """
+        Отправка текста в поле ввода по xpath.
+        """
+        self.logger.info(f'Попытка отправить текст в поле ввода по xpath: {xpath}')
         try:
-            element = WebDriverWait(self.__driver, timeout).until(
-                EC.element_to_be_clickable((By.XPATH, xpath))
+            input_field = WebDriverWait(self.__driver, timeout).until(
+                EC.visibility_of_element_located((By.XPATH, xpath))
             )
-            element.click()
-            self.logger.info(f'Элемент {xpath} кликабельный')
+            input_field.clear()  # очищаем поле перед вводом
+            input_field.send_keys(text)  # отправляем текст
+            self.logger.info(f'Текст "{text}" успешно отправлен в поле {xpath}')
             return True
-        except (TimeoutException, ElementClickInterceptedException) as e:
-            self.logger.error(f'Элемент {xpath} не кликабельный, {e}')
+        except (TimeoutException, NoSuchElementException) as e:
+            self.logger.error(f'Не удалось отправить текст в поле {xpath}: {e}')
             return False
