@@ -10,7 +10,7 @@ from utils.logger import Logger
 class Page:
     def __init__(self, driver: WebDriver):
         self.__driver = driver
-        self.browser_timeout = 10
+        self.browser_timeout = 2
         self.logger = Logger().get_logger()
 
     def _wait_to_load(self, xpath: str, timeout: int) -> bool:

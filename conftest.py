@@ -4,7 +4,7 @@ from lib.avito.fixtures import *
 
 @pytest.fixture(scope='module')
 def browser():
-    driver = webdriver.Firefox()
+    driver = webdriver.Chrome()
     yield driver
     driver.quit()
 
