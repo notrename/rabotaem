@@ -45,3 +45,29 @@ class Page:
             if silent:
                 return None
             raise NoSuchElementException(f'Xpath: {xpath} не найден')
+
+    def click_element(self, by, value):
+        """Кликает по элементу, если он доступен."""
+        self.logger.info(f'Попытка кликнуть по элементу: {value} с использованием {by}')
+        try:
+            element = WebDriverWait(self.__driver, self.browser_timeout).until(
+                EC.element_to_be_clickable((by, value))
+            )
+            element.click()
+            self.logger.info(f'Успешно кликнули по элементу: {value}')
+        except Exception as e:
+            self.logger.error(f"Ошибка при клике по элементу: {e}")
+            raise  # Пробрасываем исключение дальше, чтобы его можно было обработать
+
+    def is_element_clickable(self, by, value):
+        """Проверяет, кликабельный ли элемент."""
+        self.logger.info(f'Проверка кликабельности элемента: {value} с использованием {by}')
+        try:
+            element = WebDriverWait(self.__driver, self.browser_timeout).until(
+                EC.element_to_be_clickable((by, value))
+            )
+            self.logger.info(f'Элемент {value} кликабельный')
+            return True
+        except Exception as e:
+            self.logger.warning(f'Элемент {value} не кликабельный: {e}')
+            return False

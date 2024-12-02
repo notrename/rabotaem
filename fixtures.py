@@ -1,7 +1,7 @@
 import pytest
 from conftest import browser
-# + импортировать сами классы
+from lib.okko.okko_page import OkkoPage
 
 @pytest.fixture
-def okko_web_page(browser: webdriver) -> OkkoPage:
+def okko_web_page(browser) -> OkkoPage:
     return OkkoPage(driver=browser)
