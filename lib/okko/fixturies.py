@@ -1,5 +1,4 @@
 import pytest
-from conftest import browser
 from lib.okko.okko_page import OkkoPage
 
 @pytest.fixture
