@@ -10,3 +10,4 @@ class OkkoPage(Page):
         """Открывает сайт Okko."""
         url = "https://okko.tv/?clientSessionId=19386d65-b2f9-7aaa-38f0-2f0bedf22974&sso=false"
         self.open_site(url)
+

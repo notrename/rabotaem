@@ -1,4 +1,4 @@
-from selenium.common import InvalidSessionIdException, TimeoutException, NoSuchElementException
+from selenium.common import InvalidSessionIdException, TimeoutException, NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -46,28 +46,27 @@ class Page:
                 return None
             raise NoSuchElementException(f'Xpath: {xpath} не найден')
 
-    def click_element(self, by, value):
-        """Кликает по элементу, если он доступен."""
-        self.logger.info(f'Попытка кликнуть по элементу: {value} с использованием {by}')
+    def click_element(self, xpath: str, timeout: int = 2):
+        self.logger.info(f'Попытка кликнуть по элементу по xpath\'y: {xpath}')
         try:
-            element = WebDriverWait(self.__driver, self.browser_timeout).until(
-                EC.element_to_be_clickable((by, value))
+            element = WebDriverWait(self.__driver, timeout).until(
+                EC.element_to_be_clickable((By.XPATH, xpath))
             )
             element.click()
-            self.logger.info(f'Успешно кликнули по элементу: {value}')
-        except Exception as e:
-            self.logger.error(f"Ошибка при клике по элементу: {e}")
-            raise  # Пробрасываем исключение дальше, чтобы его можно было обработать
+            self.logger.info(f'Клик по элементу {xpath} выполнен успешно')
+        except (TimeoutException, ElementClickInterceptedException) as e:
+            self.logger.error(f'Не удалось кликнуть по элементу {xpath}: {e}')
+            raise
 
-    def is_element_clickable(self, by, value):
-        """Проверяет, кликабельный ли элемент."""
-        self.logger.info(f'Проверка кликабельности элемента: {value} с использованием {by}')
+    def element_is_clickable(self, xpath: str, timeout: int = 2) -> bool:
+        self.logger.info(f'Попытка кликнуть по элементу по xpath\'y: {xpath}')
         try:
-            element = WebDriverWait(self.__driver, self.browser_timeout).until(
-                EC.element_to_be_clickable((by, value))
+            element = WebDriverWait(self.__driver, timeout).until(
+                EC.element_to_be_clickable((By.XPATH, xpath))
             )
-            self.logger.info(f'Элемент {value} кликабельный')
+            element.click()
+            self.logger.info(f'Клик по элементу {xpath} выполнен успешно')
             return True
-        except Exception as e:
-            self.logger.warning(f'Элемент {value} не кликабельный: {e}')
+        except (TimeoutException, ElementClickInterceptedException) as e:
+            self.logger.error(f'Не удалось кликнуть по элементу {xpath}: {e}')
             return False
