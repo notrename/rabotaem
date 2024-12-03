@@ -87,3 +87,53 @@ class Page:
         except (TimeoutException, NoSuchElementException) as e:
             self.logger.error(f'Не удалось отправить текст в поле {element}: {e}')
             return False
+
+    def click_element(self, element, timeout: int = 5) -> bool:
+        """
+        Кликает по элементу, если он видим и кликабелен.
+        """
+        self.logger.info(f'Попытка кликнуть по элементу: {element}')
+        try:
+            clickable_element = WebDriverWait(self.__driver, timeout).until(
+                EC.element_to_be_clickable(element)
+            )
+            clickable_element.click()
+            self.logger.info(f'Клик по элементу {element} выполнен успешно')
+            return True
+        except TimeoutException:
+            self.logger.error(f'Элемент {element} не стал кликабельным за {timeout} секунд')
+            return False
+        except (ElementClickInterceptedException, StaleElementReferenceException) as e:
+            self.logger.error(f'Ошибка при клике по элементу {element}: {e}')
+            return False
+
+    def element_is_clickable(self, element, timeout: int = 2) -> bool:
+        """
+        Проверяет, доступен ли элемент для клика в течение заданного времени.
+        """
+        self.logger.info(f'Проверка кликабельности элемента: {element}')
+        try:
+            WebDriverWait(self.__driver, timeout).until(
+                EC.element_to_be_clickable(element)
+            )
+            self.logger.info(f'Элемент {element} доступен для клика')
+            return True
+        except TimeoutException:
+            self.logger.error(f'Элемент {element} не стал кликабельным за {timeout} секунд')
+            return False
+        except NoSuchElementException:
+            self.logger.error(f'Элемент {element} не найден на странице')
+            return False
+
+    def check_url_contains(self, substring: str, timeout: int = 2) -> bool:
+        """Проверяет, содержит ли текущий URL указанный подстроку."""
+        self.logger.info(f"Проверяем, что URL содержит подстроку: {substring}")
+        try:
+            WebDriverWait(self.__driver, timeout).until(
+                lambda driver: substring in driver.current_url
+            )
+            self.logger.info(f"URL содержит подстроку: {substring}")
+            return True
+        except TimeoutException:
+            self.logger.error(f"URL не содержит подстроку: {substring}")
+            return False

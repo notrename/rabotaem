@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from utils.page import Page
 from lib.avito.elements.avito_page_elements import AvitoPageElements
@@ -19,25 +18,48 @@ class AvitoPage(Page):
         return True
 
     def open_avito_check(self):
-        self.logger.warning('Запуск тест-сьюта Avito')
-        self.logger.info('Запуск теста открытия главной страницы сайта Avito')
         """Открывает сайт Avito."""
         url = 'https://www.avito.ru/'
         self.open_site(url)
-        self.logger.info('Тест пройден')
-        self.logger.warning('Запуск следующего теста')
         return True
 
     def avito_element_is_visible(self):
-        self.logger.info('Запуск теста отображения элемента')
         self.open_avito()
         self.element_is_visible(self.elems.button_search, timeout=0)
-        self.logger.info('Тест пройден')
-        self.logger.warning('Запуск следующего теста')
 
     def avito_send_keys_to_input(self):
-        self.logger.info('Запуск теста строки ввода')
         self.open_avito()
         self.send_keys_to_input(self.elems.input_search, 'Lexus GS 350', timeout=0)
-        self.logger.info('Тест пройден')
-        self.logger.warning('Конец записей логирования')
+
+    def avito_is_click(self):
+        self.open_avito()
+        self.element_is_clickable(self.elems.button_search, timeout=0)
+
+    def avito_click_button(self):
+        self.open_avito()
+        self.click_element(self.elems.button_search, timeout=0)
+
+    def avito_search_for_item(self):
+        """Выполняет поиск товара на сайте Avito."""
+        self.open_avito()
+        self.send_keys_to_input(self.elems.input_search, 'Lexus GS 350', timeout=0)
+        self.element_is_clickable(self.elems.button_search)
+        self.click_element(self.elems.button_search)
+        self.check_url_contains("q")
+
+    def avito_transfer_business(self):
+        """Выполняет переход на страницу бизнеса сайта Avito."""
+        self.open_avito()
+        self.element_is_clickable(self.elems.button_business)
+        self.click_element(self.elems.button_business)
+        self.check_url_contains("business")
+
+    def avito_category(self):
+        self.open_avito()
+        self.element_is_clickable(self.elems.button_category)
+        self.click_element(self.elems.button_category)
+        self.click_element(self.elems.button_cars)
+        self.element_is_clickable(self.elems.button_jeep)
+        self.click_element(self.elems.button_jeep)
+        self.check_url_contains("vezdehody")
+
