@@ -3,7 +3,7 @@ from lib.avito.avito_page import AvitoPage
 from lib.avito.fixtures import avito_web_page
 
 class TestAvitoPage:
-    @pytest.fixture(autouse=True)
+    @pytest.fixture(scope='function', autouse=True)
     def setup(self, avito_web_page: AvitoPage):
         self.page = avito_web_page  # Устанавливаем значение в фикстуре
     def test_open_main_page(self):
