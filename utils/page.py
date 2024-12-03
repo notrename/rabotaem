@@ -50,7 +50,8 @@ class Page:
         self._wait_to_load(xpath)  # Ожидаем загрузку элемента
         try:
             element = self.__driver.find_element(by=By.XPATH, value=xpath)
-            if element.click() is True:
+            element.click()
+            if element.click() is not False:
                 self.logger.info(f'Клик по элементу {xpath} выполнен успешно')
         except (ElementClickInterceptedException, StaleElementReferenceException) as e:
             self.logger.error(f'Не удалось кликнуть по элементу {xpath}: {e}')
@@ -63,8 +64,7 @@ class Page:
         self.logger.info(f'Проверка доступности клика по элементу по xpath: {xpath}')
         self._wait_to_load(xpath)  # Ожидаем загрузку элемента
         try:
-            element = self.__driver.find_element(by=By.XPATH, value=xpath)
-            element.click()
+            self.__driver.find_element(by=By.XPATH, value=xpath)
             is_clickable = EC.element_to_be_clickable((By.XPATH, xpath))(self.__driver)
             if is_clickable:
                 self.logger.info(f'Элемент {xpath} доступен для клика')
