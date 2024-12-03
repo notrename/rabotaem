@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.expected_conditions import visibility_of
 
 from utils.logger import Logger
 
@@ -52,37 +53,37 @@ class Page:
                 return False
             raise NoSuchElementException(f'Xpath: {xpath} не найден')
 
-    def element_is_visible(self, xpath: str, timeout: int = 2) -> bool:
+    def element_is_visible(self, element, timeout: int = 2) -> bool:
         """
         Проверка, виден ли элемент на странице в течение заданного времени.
         """
-        self.logger.info(f'Попытка проверить видимость элемента по xpath: {xpath}')
+        self.logger.info(f'Попытка проверить видимость элемента по xpath: {element}')
         try:
             WebDriverWait(self.__driver, timeout).until(
-                EC.visibility_of_element_located((By.XPATH, xpath))
+                EC.visibility_of(element)
             )
-            self.logger.info(f'Элемент {xpath} видим на странице')
+            self.logger.info(f'Элемент {element} видим на странице')
             return True
         except TimeoutException as e:
-            self.logger.error(f'Элемент {xpath} не стал видимым за {timeout} секунд: {e}')
+            self.logger.error(f'Элемент {element} не стал видимым за {timeout} секунд: {e}')
             return False
         except NoSuchElementException as e:
-            self.logger.error(f'Элемент не найден по xpath {xpath}: {e}')
+            self.logger.error(f'Элемент не найден по xpath {element}: {e}')
             return False
 
-    def send_keys_to_input(self, xpath: str, text: str, timeout: int = 2) -> bool:
+    def send_keys_to_input(self, element, text: str, timeout: int = 2) -> bool:
         """
         Отправка текста в поле ввода по xpath.
         """
-        self.logger.info(f'Попытка отправить текст в поле ввода по xpath: {xpath}')
+        self.logger.info(f'Попытка отправить текст в поле ввода по xpath: {element}')
         try:
             input_field = WebDriverWait(self.__driver, timeout).until(
-                EC.visibility_of_element_located((By.XPATH, xpath))
+                EC.visibility_of(element)
             )
             input_field.clear()  # очищаем поле перед вводом
             input_field.send_keys(text)  # отправляем текст
-            self.logger.info(f'Текст "{text}" успешно отправлен в поле {xpath}')
+            self.logger.info(f'Текст "{text}" успешно отправлен в поле {element}')
             return True
         except (TimeoutException, NoSuchElementException) as e:
-            self.logger.error(f'Не удалось отправить текст в поле {xpath}: {e}')
+            self.logger.error(f'Не удалось отправить текст в поле {element}: {e}')
             return False
