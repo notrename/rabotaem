@@ -1,3 +1,6 @@
+from asyncio import timeout
+from time import sleep
+
 from selenium.common import InvalidSessionIdException, NoSuchElementException, ElementClickInterceptedException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -73,6 +76,20 @@ class Page:
         except (NoSuchElementException, StaleElementReferenceException) as e:
             self.logger.error(f'Ошибка при проверке кликабельности элемента {xpath}: {e}')
             raise Exception(f'Ошибка при проверке кликабельности элемента {xpath}: {e}')
+
+    def click_to_proceed(self, xpath: str, expected_xpath: str) -> None:
+        self.logger.info(f'Проверка доступности клика по элементу по xpath: {xpath}')
+        self._wait_to_load(xpath)  # Ожидаем загрузку элемента
+        try:
+            element = self.__driver.find_element(by=By.XPATH, value=xpath)
+            element.click()
+            self.logger.info(f'Кликнули по элементу {xpath}')
+            # Ожидаем загрузку нового элемента
+            WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located((By.XPATH, expected_xpath)))
+            self.logger.info(f'Элемент {expected_xpath} успешно загружен после клика по элементу {xpath}')
+        except (NoSuchElementException, StaleElementReferenceException) as e:
+            self.logger.error(f'Ошибка при попытке кликнуть по элементу {xpath}: {e}')
+            raise Exception(f'Ошибка при попытке кликнуть по элементу {xpath}: {e}')
 
     def refresh(self):
         self.__driver.refresh()

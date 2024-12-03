@@ -22,4 +22,8 @@ class TestOkkoPage:
     def test_click(self):
         self.page.okko_page_click_to_element(self.element.find())
 
+    def test_click_and_proceed(self):
+        self.page.click_and_proceed(xpath=self.element.find(), expected_xpath=self.element.proceed())
+
+
 

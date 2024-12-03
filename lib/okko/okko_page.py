@@ -1,3 +1,6 @@
+from asyncio import timeout
+from idlelib.run import exit_now
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from utils.page import Page
@@ -29,3 +32,8 @@ class OkkoPage(Page):
         self.open_okko()
         self.click_element(xpath=xpath)
         self.refresh()
+
+    def click_and_proceed(self, xpath=None, expected_xpath=None):
+        self.open_okko()
+        self.click_to_proceed(xpath=xpath, expected_xpath=expected_xpath)
+

@@ -6,9 +6,14 @@ class Elements(OkkoPage):
     def __init__(self, driver: WebDriver):
         super().__init__(driver)
         self.find()
+        self.proceed()
 
     @staticmethod
     def find():
-        xpath = "//nav//button"
+        xpath = str("//nav//a[contains(text(), 'Войти')]")
         return xpath
 
+    @staticmethod
+    def proceed():
+        xpath = str('//*[@id="root"]/div')
+        return xpath
