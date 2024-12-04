@@ -2,6 +2,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from utils.page import Page
 from lib.avito.elements.avito_page_elements import AvitoPageElements
 
+
 class AvitoPage(Page):
     def __init__(self, driver: WebDriver):
         super().__init__(driver=driver)
@@ -62,4 +63,3 @@ class AvitoPage(Page):
         self.element_is_clickable(self.elems.button_jeep)
         self.click_element(self.elems.button_jeep)
         self.check_url_contains("vezdehody")
-
