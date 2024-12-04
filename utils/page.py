@@ -1,8 +1,9 @@
-from selenium.common import InvalidSessionIdException, TimeoutException, NoSuchElementException
+from selenium.common import InvalidSessionIdException, TimeoutException, NoSuchElementException, ElementClickInterceptedException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.expected_conditions import visibility_of
 
 from utils.logger import Logger
 
@@ -10,38 +11,129 @@ from utils.logger import Logger
 class Page:
     def __init__(self, driver: WebDriver):
         self.__driver = driver
-        self.browser_timeout = 10
+        self.browser_timeout = 2
         self.logger = Logger().get_logger()
 
-    def _wait_to_load(self, xpath: str, timeout: int):
-        WebDriverWait(driver=self.__driver, timeout=timeout).until(
-            EC.visibility_of_element_located(
-                (By.XPATH, xpath),
+    def _wait_to_load(self, xpath: str, timeout: int) -> bool:
+        self.logger.info(f'Ожидание загрузки элемента по xpath: {xpath}')
+        try:
+            WebDriverWait(driver=self.__driver, timeout=timeout).until(
+                EC.visibility_of_element_located((By.XPATH, xpath))
             )
-        )
+            self.logger.info(f'Элемент {xpath} успешно загружен')
+            return True
+        except TimeoutException as e:
+            self.logger.error(f'Элемент {xpath} не загрузился за {timeout} секунд: {e}')
+            return False
 
-    def open_site(self, url: str, error_message=None):
+    def open_site(self, url: str, error_message=None) -> bool:
         self.logger.info(f'Попытка открыть сайт: {url}')
         try:
             self.__driver.get(url)
+            self.logger.info(f'Сайт {url} открылся')
+            return True
         except InvalidSessionIdException as e:
             message = f"Потеряно соединение с браузером. Возможно браузер был закрыт или аварийно завершил работу\n{e}"
+            self.logger.error(message)
             raise InvalidSessionIdException(message)
         except TimeoutException as e:
-            message = (
-                f"Не дождались полной загрузки страницы в течение {self.browser_timeout} секунд"
-            )
-            raise TimeoutException(f"{error_message}\n{e}" or message)
-        self.logger.info(f'Сайт {url} открылся')
+            message = f"Не дождались полной загрузки страницы в течение {self.browser_timeout} секунд"
+            self.logger.error(f"{error_message}\n{e}" or message)
+            return False
 
-    def xpath_is_present(self, xpath: str, silent: bool = True):
-        self.logger.info(f'Попытка найти элемент по xpath\'y: {xpath}')
+    def xpath_is_present(self, xpath: str, silent: bool = True) -> bool:
+        self.logger.info(f'Попытка найти элемент по xpath: {xpath}')
         try:
             self.__driver.find_element(by=By.XPATH, value=xpath)
-            self.logger.info(f'Элемент успешно найден')
+            self.logger.info(f'Элемент {xpath} успешно найден')
             return True
         except NoSuchElementException as e:
-            self.logger.warning('Элемент не найден')
+            self.logger.warning(f'Элемент {xpath} не найден')
             if silent:
-                return None
+                return False
             raise NoSuchElementException(f'Xpath: {xpath} не найден')
+
+    def element_is_visible(self, element, timeout: int = 2) -> bool:
+        """
+        Проверка, виден ли элемент на странице в течение заданного времени.
+        """
+        self.logger.info(f'Попытка проверить видимость элемента по xpath: {element}')
+        try:
+            WebDriverWait(self.__driver, timeout).until(
+                EC.visibility_of(element)
+            )
+            self.logger.info(f'Элемент {element} видим на странице')
+            return True
+        except TimeoutException as e:
+            self.logger.error(f'Элемент {element} не стал видимым за {timeout} секунд: {e}')
+            return False
+        except NoSuchElementException as e:
+            self.logger.error(f'Элемент не найден по xpath {element}: {e}')
+            return False
+
+    def send_keys_to_input(self, element, text: str, timeout: int = 2) -> bool:
+        """
+        Отправка текста в поле ввода по xpath.
+        """
+        self.logger.info(f'Попытка отправить текст в поле ввода по xpath: {element}')
+        try:
+            input_field = WebDriverWait(self.__driver, timeout).until(
+                EC.visibility_of(element)
+            )
+            input_field.clear()  # очищаем поле перед вводом
+            input_field.send_keys(text)  # отправляем текст
+            self.logger.info(f'Текст "{text}" успешно отправлен в поле {element}')
+            return True
+        except (TimeoutException, NoSuchElementException) as e:
+            self.logger.error(f'Не удалось отправить текст в поле {element}: {e}')
+            return False
+
+    def click_element(self, element, timeout: int = 5) -> bool:
+        """
+        Кликает по элементу, если он видим и кликабелен.
+        """
+        self.logger.info(f'Попытка кликнуть по элементу: {element}')
+        try:
+            clickable_element = WebDriverWait(self.__driver, timeout).until(
+                EC.element_to_be_clickable(element)
+            )
+            clickable_element.click()
+            self.logger.info(f'Клик по элементу {element} выполнен успешно')
+            return True
+        except TimeoutException:
+            self.logger.error(f'Элемент {element} не стал кликабельным за {timeout} секунд')
+            return False
+        except (ElementClickInterceptedException, StaleElementReferenceException) as e:
+            self.logger.error(f'Ошибка при клике по элементу {element}: {e}')
+            return False
+
+    def element_is_clickable(self, element, timeout: int = 2) -> bool:
+        """
+        Проверяет, доступен ли элемент для клика в течение заданного времени.
+        """
+        self.logger.info(f'Проверка кликабельности элемента: {element}')
+        try:
+            WebDriverWait(self.__driver, timeout).until(
+                EC.element_to_be_clickable(element)
+            )
+            self.logger.info(f'Элемент {element} доступен для клика')
+            return True
+        except TimeoutException:
+            self.logger.error(f'Элемент {element} не стал кликабельным за {timeout} секунд')
+            return False
+        except NoSuchElementException:
+            self.logger.error(f'Элемент {element} не найден на странице')
+            return False
+
+    def check_url_contains(self, substring: str, timeout: int = 2) -> bool:
+        """Проверяет, содержит ли текущий URL указанный подстроку."""
+        self.logger.info(f"Проверяем, что URL содержит подстроку: {substring}")
+        try:
+            WebDriverWait(self.__driver, timeout).until(
+                lambda driver: substring in driver.current_url
+            )
+            self.logger.info(f"URL содержит подстроку: {substring}")
+            return True
+        except TimeoutException:
+            self.logger.error(f"URL не содержит подстроку: {substring}")
+            return False
