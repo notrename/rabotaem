@@ -167,6 +167,24 @@ class Page:
             self.logger.error(f'Элемент {element} не найден на странице')
             return False
 
+    def element_is_clickable_xpath(self, xpath):
+        """
+        Проверяет, доступен ли элемент для клика в течение заданного времени.
+        """
+        self.logger.info(f'Проверка кликабельности элемента: {xpath}')
+        self.__driver.find_element(by=By.XPATH, value=xpath)
+        self._wait_to_load(xpath)  # Ожидаем загрузку элемента
+        try:
+            self.logger.info(f'Элемент {xpath} доступен для клика')
+            return True
+        except TimeoutException:
+            self.logger.error(f'Элемент {xpath} не стал кликабельным за {timeout} секунд')
+            return False
+        except NoSuchElementException:
+            self.logger.error(f'Элемент {xpath} не найден на странице')
+            return False
+
+
     def check_url_contains(self, substring: str, timeout: int = 2) -> bool:
         """Проверяет, содержит ли текущий URL указанный подстроку."""
         self.logger.info(f"Проверяем, что URL содержит подстроку: {substring}")

@@ -22,7 +22,7 @@ class OkkoPage(Page):
 
     def okko_page_element_is_clickable(self, xpath=None):
         self.open_okko()
-        self.element_is_clickable(xpath=xpath)
+        self.element_is_clickable_xpath(xpath=xpath)
         self.refresh()
 
     def okko_page_click_to_element(self, xpath=None):
