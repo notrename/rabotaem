@@ -8,19 +8,16 @@ class Elements(OkkoPage):
 
     @staticmethod
     def find():
-        # xpath = str("//nav//a[contains(text(), 'Войти')]")
         xpath = str('//*[@id="root"]/div[2]/div[1]/div[1]/header[1]/nav/div/div[2]/div/button')
         return xpath
 
     @staticmethod
     def proceed():
-        # xpath = str('//*[@id="root"]/div')
         xpath = str('//*[@id="root"]/div/div[2]')
         return xpath
 
     @staticmethod
     def find_button():
-        # xpath = str('//*[@id="root"]/div')
         xpath = str('//*[@id="root"]/div[2]/div[1]/div[1]/header[1]/nav/div/div[1]')
         return xpath
 
@@ -32,4 +29,14 @@ class Elements(OkkoPage):
     @staticmethod
     def find_after_click_find_button():
         xpath = str('//*[@id="root"]/div[2]/div[1]/div[2]/section[1]/div/div[1]/div/div[1]/a/div/figure/footer/div/span')
+        return xpath
+
+    @staticmethod
+    def find_movies_element():
+        xpath = str('//*[@id="root"]/div[2]/div[1]/div[2]/article[2]/div/div[1]/div[2]/a/button/div/div/span')
+        return xpath
+
+    @staticmethod
+    def expected_movies_element():
+        xpath = str('//*[@id="root"]/div[2]/div[1]/div[2]/div/div/div/div[1]/h1')
         return xpath
