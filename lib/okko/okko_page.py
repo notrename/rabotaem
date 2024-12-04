@@ -7,7 +7,7 @@ class OkkoPage(Page):
         super().__init__(driver)
 
     def open_okko_check(self):
-        url = "https://okko.tv/?clientSessionId=19386d65-b2f9-7aaa-38f0-2f0bedf22974&sso=false"
+        url = "https://okko.tv"
         self.open_site(url)
         return True
 
@@ -20,6 +20,9 @@ class OkkoPage(Page):
         self.open_okko()
         self.xpath_is_present(xpath=xpath, silent = True)
 
+    def find_element_in_search(self, xpath=None):
+        self.xpath_is_present(xpath=xpath, silent = True)
+
     def okko_page_element_is_clickable(self, xpath=None):
         self.open_okko()
         self.element_is_clickable_xpath(xpath=xpath)
@@ -28,9 +31,20 @@ class OkkoPage(Page):
     def okko_page_click_to_element(self, xpath=None):
         self.open_okko()
         self.click_element(xpath=xpath)
-        self.refresh()
 
     def click_and_proceed(self, xpath=None, expected_xpath=None):
         self.open_okko()
         self.click_to_proceed(xpath=xpath, expected_xpath=expected_xpath)
+
+    def search_window(self, xpath=None, expected_xpath=None):
+        self.open_okko()
+        self.click_to_proceed(xpath=xpath, expected_xpath=expected_xpath)
+
+    def fild(self, xpath=None, value=None):
+        self.fild_search_window(xpath=xpath, value=value)
+        self.click_element(xpath=xpath)
+        self.click_search_window(xpath=xpath)
+
+
+
 

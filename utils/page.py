@@ -1,3 +1,6 @@
+import time ### Этот импорт мне очень нужен чтобы не фейлились некоторые тесты!
+from asyncio import timeout
+from selenium.webdriver.common.keys import Keys
 from selenium.common import InvalidSessionIdException, NoSuchElementException, ElementClickInterceptedException, \
     StaleElementReferenceException, TimeoutException
 from selenium.webdriver.common.by import By
@@ -81,12 +84,15 @@ class Page:
     def click_to_proceed(self, xpath: str, expected_xpath: str) -> None:
         self.logger.info(f'Проверка доступности клика по элементу по xpath: {xpath}')
         self._wait_to_load(xpath)  # Ожидаем загрузку элемента
+        time.sleep(1)
         try:
             element = self.__driver.find_element(by=By.XPATH, value=xpath)
-            WebDriverWait(self.__driver, 3).until(EC.presence_of_element_located((By.XPATH, xpath)))
+            WebDriverWait(self.__driver, 2).until(EC.presence_of_element_located((By.XPATH, xpath)))
+            element.click()
             self.logger.info(f'Кликнули по элементу {xpath}')
+            time.sleep(1)
             # Ожидаем загрузку нового элемента
-            WebDriverWait(self.__driver, 3).until(EC.presence_of_element_located((By.XPATH, expected_xpath)))
+            WebDriverWait(self.__driver, 2).until(EC.presence_of_element_located((By.XPATH, expected_xpath)))
             self.logger.info(f'Элемент {expected_xpath} успешно загружен после клика по элементу {xpath}')
         except (NoSuchElementException, StaleElementReferenceException) as e:
             self.logger.error(f'Ошибка при попытке кликнуть по элементу {xpath}: {e}')
@@ -197,3 +203,14 @@ class Page:
         except TimeoutException:
             self.logger.error(f"URL не содержит подстроку: {substring}")
             return False
+
+    def fild_search_window(self, xpath, value):
+        element = self.__driver.find_element(by=By.XPATH, value=xpath)
+        element.send_keys(value)
+        return value
+
+    def click_search_window(self, xpath):
+        element = self.__driver.find_element(by=By.XPATH, value=xpath)
+        time.sleep(1)
+        element.send_keys(Keys.ENTER)
+        time.sleep(3)
