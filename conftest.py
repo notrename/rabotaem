@@ -1,8 +1,7 @@
 from lib.okko.fixturies import *
 from selenium import webdriver
 
-
-@pytest.fixture(scope='module')
+@pytest.fixture(autouse=True)
 def browser():
     driver = webdriver.Chrome()
     driver.maximize_window()  # Открываем браузер во весь экран
