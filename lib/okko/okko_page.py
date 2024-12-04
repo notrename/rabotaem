@@ -1,6 +1,3 @@
-from asyncio import timeout
-from idlelib.run import exit_now
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from utils.page import Page
