@@ -20,7 +20,7 @@ class Page:
     def _wait_to_load(self, xpath: str) -> None:
         self.logger.info(f'Ожидание загрузки элемента по xpath: {xpath}')
         try:
-            WebDriverWait(driver=self.__driver, timeout=10).until(
+            WebDriverWait(driver=self.__driver, timeout=3).until(
                 EC.visibility_of_element_located((By.XPATH, xpath))
             )
             self.logger.info(f'Элемент {xpath} успешно загружен')
@@ -84,16 +84,16 @@ class Page:
     def click_to_proceed(self, xpath: str, expected_xpath: str) -> None:
         self.logger.info(f'Проверка доступности клика по элементу по xpath: {xpath}')
         self._wait_to_load(xpath)  # Ожидаем загрузку элемента
-        time.sleep(2)
+        time.sleep(1)
         try:
             element = self.__driver.find_element(by=By.XPATH, value=xpath)
             WebDriverWait(self.__driver, 2).until(EC.presence_of_element_located((By.XPATH, xpath)))
             element.click()
             self.logger.info(f'Кликнули по элементу {xpath}')
-            time.sleep(2)
+            time.sleep(1)
             # Ожидаем загрузку нового элемента
             WebDriverWait(self.__driver, 2).until(EC.presence_of_element_located((By.XPATH, expected_xpath)))
-            time.sleep(2)
+            time.sleep(1)
             self.logger.info(f'Элемент {expected_xpath} успешно загружен после клика по элементу {xpath}')
         except (NoSuchElementException, StaleElementReferenceException) as e:
             self.logger.error(f'Ошибка при попытке кликнуть по элементу {xpath}: {e}')
@@ -137,7 +137,7 @@ class Page:
             self.logger.error(f'Не удалось отправить текст в поле {element}: {e}')
             return False
 
-    def click_element_by_xpath(self, element, timeout: int = 5) -> bool:
+    def click_element_by_xpath(self, element, timeout: int = 2) -> bool:
         """
         Кликает по элементу, если он видим и кликабелен.
         """

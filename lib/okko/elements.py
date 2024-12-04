@@ -7,36 +7,42 @@ class Elements(OkkoPage):
         super().__init__(driver)
 
     @staticmethod
-    def find():
-        xpath = str('//*[@id="root"]/div[2]/div[1]/div[1]/header[1]/nav/div/div[2]/div/button')
+    def subscription_button():
+        # Сокращён и работает
+        xpath = str('//div[@id="root"]//button')
         return xpath
 
     @staticmethod
-    def proceed():
+    def back_after_proceed_subscription_button():
         xpath = str('//*[@id="root"]/div/div[2]')
         return xpath
 
     @staticmethod
-    def find_button():
-        xpath = str('//*[@id="root"]/div[2]/div[1]/div[1]/header[1]/nav/div/div[1]')
+    def search_button():
+        # Сокращён и работает
+        xpath = str('//*[@test-id="nav_search"]')
         return xpath
 
     @staticmethod
     def find_input_window():
-        xpath = str('//*[@id="root"]/div[2]/div[1]/div[1]/header[1]/nav/div[1]/div/div[1]/form/div/div/input')
+        # Сокращён и работает
+        xpath = str('//*[@id="root"]//input[contains(@placeholder, "Название фильма, сериала или имя актёра, режиссёра")]')
         return xpath
 
     @staticmethod
     def find_after_click_find_button():
-        xpath = str('//*[@id="root"]/div[2]/div[1]/div[2]/section[1]/div/div[1]/div/div[1]/a/div/figure/footer/div/span')
+        # Сокращён и работает
+        xpath = str('//*[@id="root"]//section//span[contains(text(), "Война")]')
         return xpath
 
     @staticmethod
     def find_movies_element():
-        xpath = str('//*[@id="root"]/div[2]/div[1]/div[2]/article[2]/div/div[1]/div[2]/a/button/div/div/span')
+        # Сокращён и работает
+        xpath = str('//*[@id="root"]//article[2]//div[contains(., "Фильмы")]//button//span')
         return xpath
 
     @staticmethod
     def expected_movies_element():
-        xpath = str('//*[@id="root"]/div[2]/div[1]/div[2]/div/div/div/div[1]/h1')
+        # Сокращён и работает
+        xpath = str('//*[@id="root"]//h1[contains(text(), "Фильмы")]')
         return xpath
