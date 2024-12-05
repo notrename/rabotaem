@@ -1,0 +1,10 @@
+*.iml
+*pycache
+*.xml
+allure-results
+*.log
+.idea
+__pycache__
+*/pytest_cache
+*/__pycache__
+.env
