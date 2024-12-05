@@ -30,7 +30,7 @@ class OkkoPage(Page):
 
     def okko_page_click_to_element(self, xpath=None):
         self.open_okko()
-        self.click_element(xpath=xpath)
+        self.click_element_s(xpath=xpath)
 
     def click_and_proceed(self, xpath=None, expected_xpath=None):
         self.open_okko()
@@ -42,7 +42,7 @@ class OkkoPage(Page):
 
     def fild(self, xpath=None, value=None):
         self.fild_search_window(xpath=xpath, value=value)
-        self.click_element(xpath=xpath)
+        self.click_element_s(xpath=xpath)
         self.click_search_window(xpath=xpath)
 
 

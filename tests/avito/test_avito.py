@@ -2,7 +2,6 @@ import pytest
 from lib.avito.avito_page import AvitoPage
 from lib.avito.fixtures import avito_web_page
 
-
 class TestAvitoPage:
 
     @pytest.fixture(scope='function', autouse=True)

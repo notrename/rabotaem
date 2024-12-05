@@ -1,5 +1,4 @@
 import time ### Этот импорт мне очень нужен чтобы не фейлились некоторые тесты!
-from asyncio import timeout
 from selenium.webdriver.common.keys import Keys
 from selenium.common import InvalidSessionIdException, NoSuchElementException, ElementClickInterceptedException, \
     StaleElementReferenceException, TimeoutException
@@ -52,7 +51,25 @@ class Page:
             if not silent:
                 raise NoSuchElementException(f'Xpath: {xpath} не найден')
 
-    def click_element(self, xpath: str) -> None:
+    def click_element(self, element, timeout: int = 10) -> bool:
+        """
+        Кликает по элементу, если он видим и кликабелен.
+        """
+        self.logger.info(f'Попытка кликнуть по элементу: {element}')
+        try:
+            clickable_element = WebDriverWait(self.__driver, timeout).until(
+                EC.element_to_be_clickable(element)
+            )
+            clickable_element.click()
+            self.logger.info(f'Клик по элементу {element} выполнен успешно')
+            return True
+        except TimeoutException:
+            self.logger.error(f'Элемент {element} не стал кликабельным за {timeout} секунд')
+            return False
+        except (ElementClickInterceptedException, StaleElementReferenceException) as e:
+            self.logger.error(f'Ошибка при клике по элементу {element}: {e}')
+
+    def click_element_s(self, xpath: str) -> None:
         self.logger.info(f'Попытка кликнуть по элементу по xpath: {xpath}')
         self._wait_to_load(xpath)  # Ожидаем загрузку элемента
         try:
