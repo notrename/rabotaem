@@ -1,4 +1,8 @@
-from selenium.common import InvalidSessionIdException, TimeoutException, NoSuchElementException, ElementClickInterceptedException, StaleElementReferenceException
+import time ### Этот импорт мне очень нужен чтобы не фейлились некоторые тесты!
+from asyncio import timeout
+from selenium.webdriver.common.keys import Keys
+from selenium.common import InvalidSessionIdException, NoSuchElementException, ElementClickInterceptedException, \
+    StaleElementReferenceException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,51 +11,96 @@ from selenium.webdriver.support.expected_conditions import visibility_of
 
 from utils.logger import Logger
 
-
 class Page:
     def __init__(self, driver: WebDriver):
         self.__driver = driver
         self.browser_timeout = 2
         self.logger = Logger().get_logger()
 
-    def _wait_to_load(self, xpath: str, timeout: int) -> bool:
+    def _wait_to_load(self, xpath: str) -> None:
         self.logger.info(f'Ожидание загрузки элемента по xpath: {xpath}')
         try:
-            WebDriverWait(driver=self.__driver, timeout=timeout).until(
+            WebDriverWait(driver=self.__driver, timeout=3).until(
                 EC.visibility_of_element_located((By.XPATH, xpath))
             )
             self.logger.info(f'Элемент {xpath} успешно загружен')
-            return True
-        except TimeoutException as e:
-            self.logger.error(f'Элемент {xpath} не загрузился за {timeout} секунд: {e}')
-            return False
+        except Exception as e:
+            self.logger.error(f'Элемент {xpath} не загрузился: {e}')
+            raise Exception(f'Элемент {xpath} не загрузился: {e}')
 
-    def open_site(self, url: str, error_message=None) -> bool:
+    def open_site(self, url: str, error_message=None) -> None:
         self.logger.info(f'Попытка открыть сайт: {url}')
         try:
             self.__driver.get(url)
             self.logger.info(f'Сайт {url} открылся')
-            return True
         except InvalidSessionIdException as e:
             message = f"Потеряно соединение с браузером. Возможно браузер был закрыт или аварийно завершил работу\n{e}"
             self.logger.error(message)
             raise InvalidSessionIdException(message)
-        except TimeoutException as e:
-            message = f"Не дождались полной загрузки страницы в течение {self.browser_timeout} секунд"
+        except Exception as e:
+            message = f"Не удалось открыть сайт {url}"
             self.logger.error(f"{error_message}\n{e}" or message)
-            return False
+            raise Exception(message)
 
-    def xpath_is_present(self, xpath: str, silent: bool = True) -> bool:
+    def xpath_is_present(self, xpath: str, silent: bool = True) -> None:
         self.logger.info(f'Попытка найти элемент по xpath: {xpath}')
         try:
             self.__driver.find_element(by=By.XPATH, value=xpath)
             self.logger.info(f'Элемент {xpath} успешно найден')
-            return True
         except NoSuchElementException as e:
             self.logger.warning(f'Элемент {xpath} не найден')
-            if silent:
-                return False
-            raise NoSuchElementException(f'Xpath: {xpath} не найден')
+            if not silent:
+                raise NoSuchElementException(f'Xpath: {xpath} не найден')
+
+    def click_element(self, xpath: str) -> None:
+        self.logger.info(f'Попытка кликнуть по элементу по xpath: {xpath}')
+        self._wait_to_load(xpath)  # Ожидаем загрузку элемента
+        try:
+            element = self.__driver.find_element(by=By.XPATH, value=xpath)
+            element.click()
+            if element.click() is not False:
+                self.logger.info(f'Клик по элементу {xpath} выполнен успешно')
+        except (ElementClickInterceptedException, StaleElementReferenceException) as e:
+            self.logger.error(f'Не удалось кликнуть по элементу {xpath}: {e}')
+            raise Exception(f'Не удалось кликнуть по элементу {xpath}: {e}')
+        except NoSuchElementException as e:
+            self.logger.error(f'Элемент не найден по xpath {xpath}: {e}')
+            raise Exception(f'Элемент не найден по xpath {xpath}: {e}')
+
+    def element_by_xpath_is_clickable(self, xpath: str) -> None:
+        self.logger.info(f'Проверка доступности клика по элементу по xpath: {xpath}')
+        self._wait_to_load(xpath)  # Ожидаем загрузку элемента
+        try:
+            self.__driver.find_element(by=By.XPATH, value=xpath)
+            is_clickable = EC.element_to_be_clickable((By.XPATH, xpath))(self.__driver)
+            if is_clickable:
+                self.logger.info(f'Элемент {xpath} доступен для клика')
+            else:
+                raise Exception(f'Элемент {xpath} не доступен для клика')
+        except (NoSuchElementException, StaleElementReferenceException) as e:
+            self.logger.error(f'Ошибка при проверке кликабельности элемента {xpath}: {e}')
+            raise Exception(f'Ошибка при проверке кликабельности элемента {xpath}: {e}')
+
+    def click_to_proceed(self, xpath: str, expected_xpath: str) -> None:
+        self.logger.info(f'Проверка доступности клика по элементу по xpath: {xpath}')
+        self._wait_to_load(xpath)  # Ожидаем загрузку элемента
+        time.sleep(1)
+        try:
+            element = self.__driver.find_element(by=By.XPATH, value=xpath)
+            WebDriverWait(self.__driver, 2).until(EC.presence_of_element_located((By.XPATH, xpath)))
+            element.click()
+            self.logger.info(f'Кликнули по элементу {xpath}')
+            time.sleep(1)
+            # Ожидаем загрузку нового элемента
+            WebDriverWait(self.__driver, 2).until(EC.presence_of_element_located((By.XPATH, expected_xpath)))
+            time.sleep(1)
+            self.logger.info(f'Элемент {expected_xpath} успешно загружен после клика по элементу {xpath}')
+        except (NoSuchElementException, StaleElementReferenceException) as e:
+            self.logger.error(f'Ошибка при попытке кликнуть по элементу {xpath}: {e}')
+            raise Exception(f'Ошибка при попытке кликнуть по элементу {xpath}: {e}')
+
+    def refresh(self):
+        self.__driver.refresh()
 
     def element_is_visible(self, element, timeout: int = 2) -> bool:
         """
@@ -88,7 +137,7 @@ class Page:
             self.logger.error(f'Не удалось отправить текст в поле {element}: {e}')
             return False
 
-    def click_element(self, element, timeout: int = 5) -> bool:
+    def click_element_by_xpath(self, element, timeout: int = 2) -> bool:
         """
         Кликает по элементу, если он видим и кликабелен.
         """
@@ -125,6 +174,24 @@ class Page:
             self.logger.error(f'Элемент {element} не найден на странице')
             return False
 
+    def element_is_clickable_xpath(self, xpath):
+        """
+        Проверяет, доступен ли элемент для клика в течение заданного времени.
+        """
+        self.logger.info(f'Проверка кликабельности элемента: {xpath}')
+        self.__driver.find_element(by=By.XPATH, value=xpath)
+        self._wait_to_load(xpath)  # Ожидаем загрузку элемента
+        try:
+            self.logger.info(f'Элемент {xpath} доступен для клика')
+            return True
+        except TimeoutException:
+            self.logger.error(f'Элемент {xpath} не стал кликабельным за {timeout} секунд')
+            return False
+        except NoSuchElementException:
+            self.logger.error(f'Элемент {xpath} не найден на странице')
+            return False
+
+
     def check_url_contains(self, substring: str, timeout: int = 2) -> bool:
         """Проверяет, содержит ли текущий URL указанный подстроку."""
         self.logger.info(f"Проверяем, что URL содержит подстроку: {substring}")
@@ -137,3 +204,14 @@ class Page:
         except TimeoutException:
             self.logger.error(f"URL не содержит подстроку: {substring}")
             return False
+
+    def fild_search_window(self, xpath, value):
+        element = self.__driver.find_element(by=By.XPATH, value=xpath)
+        element.send_keys(value)
+        return value
+
+    def click_search_window(self, xpath):
+        element = self.__driver.find_element(by=By.XPATH, value=xpath)
+        time.sleep(1)
+        element.send_keys(Keys.ENTER)
+        time.sleep(3)
