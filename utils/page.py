@@ -48,7 +48,7 @@ class Page:
         try:
             self.__driver.find_element(by=By.XPATH, value=xpath)
             self.logger.info(f'Элемент {xpath} успешно найден')
-        except NoSuchElementException as e:
+        except NoSuchElementException:
             self.logger.warning(f'Элемент {xpath} не найден')
             if not silent:
                 raise NoSuchElementException(f'Xpath: {xpath} не найден')
