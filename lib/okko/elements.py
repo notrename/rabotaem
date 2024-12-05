@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from lib.okko.okko_page import OkkoPage
 
+
 class Elements(OkkoPage):
     def __init__(self, driver: WebDriver):
         super().__init__(driver)
@@ -26,7 +27,7 @@ class Elements(OkkoPage):
     @staticmethod
     def find_input_window():
         # Сокращён и работает
-        xpath = str('//*[@id="root"]//input[contains(@placeholder, "Название фильма, сериала или имя актёра, режиссёра")]')
+        xpath = str('//*[@test-id="nav_search_form"]//input')
         return xpath
 
     @staticmethod

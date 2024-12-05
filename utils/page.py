@@ -11,6 +11,7 @@ from selenium.webdriver.support.expected_conditions import visibility_of
 
 from utils.logger import Logger
 
+
 class Page:
     def __init__(self, driver: WebDriver):
         self.__driver = driver
@@ -57,7 +58,7 @@ class Page:
         self._wait_to_load(xpath)  # Ожидаем загрузку элемента
         try:
             element = self.__driver.find_element(by=By.XPATH, value=xpath)
-            element.click()
+            # element.click()
             if element.click() is not False:
                 self.logger.info(f'Клик по элементу {xpath} выполнен успешно')
         except (ElementClickInterceptedException, StaleElementReferenceException) as e:

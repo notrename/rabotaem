@@ -35,10 +35,3 @@ class TestOkkoPage:
 
     def test_using_category_movies(self):
         self.page.click_and_proceed(xpath=self.element.find_movies_element(), expected_xpath=self.element.expected_movies_element())
-
-
-
-
-
-
-
