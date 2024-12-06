@@ -1,15 +1,13 @@
-import os
-import time ### Этот импорт мне очень нужен чтобы не фейлились некоторые тесты!
+import time  ### Этот импорт мне очень нужен чтобы не фейлились некоторые тесты!
 
 import allure
-from selenium.webdriver.common.keys import Keys
 from selenium.common import InvalidSessionIdException, NoSuchElementException, ElementClickInterceptedException, \
     StaleElementReferenceException, TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support.expected_conditions import visibility_of
 
 from utils.logger import Logger
 
@@ -234,3 +232,19 @@ class Page:
             self.logger.info('Скриншот успешно добавлен')
         except Exception:
             self.logger.info('Произошла ошибка при создании скриншота/его добавлении')
+
+    def find_element_by_xpath(self, xpath: str):
+        """
+        Поиск элемента на странице по XPATH
+        :param xpath: str
+        :return:
+        """
+        try:
+            self.__driver.find_element(
+                by=By.XPATH,
+                value=xpath,
+            )
+            self.logger(f'Элемент найден')
+        except NoSuchElementException:
+            self.logger(f'Не удалось найти элемент по XPATH={xpath}')
+            raise NoSuchElementException(f'Не удалось найти элемент по XPATH={xpath}')
