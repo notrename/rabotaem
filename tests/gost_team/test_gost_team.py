@@ -17,7 +17,11 @@ class TestGostTeam:
 
     @allure.story('Проверка возможности заказать тестирование')
     def test_order_testing(self):
-        self.page.open()
-        order_page = self.page.go_to_ordering_testing_page()
-        order_page.on_page()
-        order_page.check_is_active_elements()
+        with allure.step('Открытие страницы'):
+            self.page.open()
+        with allure.step('Переход на страницу заказа'):
+            order_page = self.page.go_to_ordering_testing_page()
+        with allure.step('Проверяем что мы находимся на странице заказа'):
+            order_page.on_page()
+        with allure.step('Проверяем input\'ы'):
+            order_page.check_is_active_elements()
