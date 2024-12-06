@@ -10,17 +10,19 @@ def browser():
 
     if driver_type == 'chromedriver':
         driver = webdriver.Chrome()
+        driver.maximize_window()  # Открываем браузер во весь экран
     elif driver_type == 'geckodriver':
         driver = webdriver.Firefox()
     elif driver_type == 'docker':
-        chrome_options = webdriver.ChromeOptions()
-        driver = webdriver.Remote(
-            command_executor='http://selenoid:4444/wd/hub',
-            options=chrome_options,
-        )
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-gpu')
+        driver = webdriver.Chrome(options=options)
+
     else:
         raise ValueError(f"Unsupported driver type: {driver_type}")
-    driver.maximize_window()  # Открываем браузер во весь экран
 
     yield driver
     driver.quit()
