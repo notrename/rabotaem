@@ -147,13 +147,13 @@ class Page:
                 EC.element_to_be_clickable(element)
             )
             clickable_element.click()
-            self.logger.info(f'Клик по элементу {element} выполнен успешно')
+            self.logger.info(f'Клик по элементу выполнен успешно')
             return True
         except TimeoutException:
-            self.logger.error(f'Элемент {element} не стал кликабельным за {timeout} секунд')
+            self.logger.error(f'Элемент не стал кликабельным за {timeout} секунд')
             return False
         except (ElementClickInterceptedException, StaleElementReferenceException) as e:
-            self.logger.error(f'Ошибка при клике по элементу {element}: {e}')
+            self.logger.error(f'Ошибка при клике по элементу: {e}')
             return False
 
     def element_is_clickable(self, element, timeout: int = 2) -> bool:
