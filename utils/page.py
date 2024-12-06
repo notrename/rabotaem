@@ -1,5 +1,4 @@
 import time ### Этот импорт мне очень нужен чтобы не фейлились некоторые тесты!
-from asyncio import timeout
 from selenium.webdriver.common.keys import Keys
 from selenium.common import InvalidSessionIdException, NoSuchElementException, ElementClickInterceptedException, \
     StaleElementReferenceException, TimeoutException
@@ -186,7 +185,7 @@ class Page:
             self.logger.info(f'Элемент {xpath} доступен для клика')
             return True
         except TimeoutException:
-            self.logger.error(f'Элемент {xpath} не стал кликабельным за {timeout} секунд')
+            self.logger.error(f'Элемент {xpath} не стал кликабельным за секунд')
             return False
         except NoSuchElementException:
             self.logger.error(f'Элемент {xpath} не найден на странице')
