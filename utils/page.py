@@ -1,4 +1,7 @@
+import os
 import time ### Этот импорт мне очень нужен чтобы не фейлились некоторые тесты!
+
+import allure
 from selenium.webdriver.common.keys import Keys
 from selenium.common import InvalidSessionIdException, NoSuchElementException, ElementClickInterceptedException, \
     StaleElementReferenceException, TimeoutException
@@ -215,3 +218,8 @@ class Page:
         time.sleep(1)
         element.send_keys(Keys.ENTER)
         time.sleep(3)
+
+    def attach_screenshot(self, file_name):
+        self.__driver.save_screenshot(filename=file_name+'.png')
+        allure.attach(body=file_name+'.png', attachment_type=allure.attachment_type.PNG)
+        os.remove(file_name+'.png')
