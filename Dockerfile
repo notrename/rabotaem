@@ -20,4 +20,4 @@ WORKDIR /app
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["sh", "-c", "pytest tests/ || true"]
+CMD ["sh", "-c", "pytest tests/"]
