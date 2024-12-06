@@ -14,7 +14,7 @@ class TestAvitoPage:
     @allure.story('Открытие страницы')
     def test_open_main_page(self):
         self.page.open_avito_check()
-        self.page.attach_screenshot('main_page')
+        self.page.attach_screenshot()
 
     def test_element_visible(self):
         self.page.avito_element_is_visible()
