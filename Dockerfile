@@ -10,11 +10,6 @@ RUN apt-get install -y \
     chromium-driver \
     && apt-get clean
 
-RUN wget https://dl.bintray.com/qameta/generic/allure/2.15.0/allure-2.15.0.tgz \
-    && tar -zxvf allure-2.15.0.tgz -C /opt/ \
-    && ln -s /opt/allure-2.15.0/bin/allure /usr/bin/allure \
-    && rm allure-2.15.0.tgz
-
 
 ENV driver_type='docker'
 ENV CHROME_BIN=/usr/bin/chromium
