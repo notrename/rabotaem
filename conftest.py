@@ -1,7 +1,8 @@
 import os
 from lib.okko.fixturies import *
-from selenium import webdriver
 from lib.avito.fixtures import *
+from lib.gost_team.fixtures import *
+from selenium import webdriver
 
 
 @pytest.fixture(scope='function')
