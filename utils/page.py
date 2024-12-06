@@ -224,4 +224,13 @@ class Page:
         Аттачим скриншот к аллюру
         :return:
         """
-        allure.attach(self.__driver.get_screenshot_as_png(), name="Screenshot", attachment_type=allure.attachment_type.PNG)
+        try:
+            self.logger.info('Скриншотим и аттачим его к аллюру')
+            allure.attach(
+                self.__driver.get_screenshot_as_png(),
+                name="Screenshot",
+                attachment_type=allure.attachment_type.PNG,
+            )
+            self.logger.info('Скриншот успешно добавлен')
+        except Exception:
+            self.logger.info('Произошла ошибка при создании скриншота/его добавлении')
