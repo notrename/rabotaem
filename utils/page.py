@@ -1,3 +1,4 @@
+import os
 import time  ### Этот импорт мне очень нужен чтобы не фейлились некоторые тесты!
 import allure
 from selenium.common import InvalidSessionIdException, NoSuchElementException, ElementClickInterceptedException, \
@@ -270,6 +271,16 @@ class Page:
             self.logger.info('Скриншот элемента успешно добавлен')
         except Exception as e:
             self.logger.error(f'Произошла ошибка при создании скриншота/его добавлении: {e}')
+
+        finally:
+            # Удаляем файлы, если они существуют
+            if os.path.exists("full_screenshot.png"):
+                os.remove("full_screenshot.png")
+                self.logger.info('Удален скриншот всей страницы (из папки с тестами, в атачах он остаётся)')
+
+            if os.path.exists("element_screenshot.png"):
+                os.remove("element_screenshot.png")
+                self.logger.info('Удален скриншот элемента (из папки с тестами, в атачах он остаётся)')
 
 
 

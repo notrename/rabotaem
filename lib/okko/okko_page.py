@@ -1,4 +1,3 @@
-import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from utils.page import Page
@@ -11,7 +10,6 @@ class OkkoPage(Page):
     def open_okko(self):
         url = "https://okko.tv"
         self.open_site(url)
-        time.sleep(2)
         self.attach_screenshot()
         return True
 

@@ -1,6 +1,5 @@
 import pytest
 import allure
-import time
 from conftest import browser
 from lib.okko.fixturies import okko_web_page
 from lib.okko.okko_page import OkkoPage
@@ -19,8 +18,8 @@ class TestOkkoPage:
             self.page.open_okko()
         with allure.step('Ожидаем загрузку хедера'):
             self.page.xpath_is_present(self.element.header())
-        with allure.step('Страница открыта'):
-            print('Страница успешно открыта')
+        with allure.step('Завершение теста'):
+            print('Все блоки кода отработали успешно, тест успешно завершён')
 
     @allure.story('Тест возможности кликабельности кнопки')
     def test_clickable_new(self):
@@ -32,6 +31,8 @@ class TestOkkoPage:
             self.page.xpath_is_present(self.element.subscription_button())
         with allure.step('Тест кликабельности кнопки "Месяц за 1₽"'):
             self.page.element_is_clickable_xpath(self.element.subscription_button()), f'Элемент {self.element.subscription_button()} доступен для клика'
+        with allure.step('Завершение теста'):
+            print('Все блоки кода отработали успешно, тест успешно завершён')
 
     @allure.story('Тест поиск элемента')
     def test_find_element(self):
@@ -43,24 +44,5 @@ class TestOkkoPage:
             self.page.xpath_is_present(self.element.search_button())
         with allure.step('Скриним элемент'):
             self.page.attach_screenshot_element(self.element.search_button())
-    #
-    # def test_clickable(self):
-    #     self.page.okko_page_element_is_clickable(self.element.subscription_button())
-    #
-    # def test_click(self):
-    #     self.page.okko_page_click_to_element(self.element.subscription_button())
-    #
-    # def test_click_and_proceed(self):
-    #     self.page.click_and_proceed(xpath=self.element.subscription_button(), expected_xpath=self.element.back_after_proceed_subscription_button())
-    #
-    # def test_click_at_find_and_wait_find_window(self):
-    #     self.page.click_and_proceed(xpath=self.element.search_button(), expected_xpath=self.element.find_input_window())
-    #
-    # def test_finding_proces(self):
-    #     self.page.click_and_proceed(xpath=self.element.search_button(), expected_xpath=self.element.find_input_window())
-    #     self.page.fild(xpath=self.element.find_input_window(), value="Война")
-    #     self.page.find_element_in_search(self.element.find_after_click_find_button())
-    #
-    # def test_using_category_movies(self):
-    #     self.page.click_and_proceed(xpath=self.element.find_movies_element(), expected_xpath=self.element.expected_movies_element())
-
+        with allure.step('Завершение теста'):
+            print('Все блоки кода отработали успешно, тест успешно завершён')
