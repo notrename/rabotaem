@@ -1,5 +1,4 @@
 import time  ### Этот импорт мне очень нужен чтобы не фейлились некоторые тесты!
-
 import allure
 from selenium.common import InvalidSessionIdException, NoSuchElementException, ElementClickInterceptedException, \
     StaleElementReferenceException, TimeoutException
@@ -10,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from utils.logger import Logger
+from PIL import Image
 
 
 class Page:
@@ -232,6 +232,46 @@ class Page:
             self.logger.info('Скриншот успешно добавлен')
         except Exception:
             self.logger.info('Произошла ошибка при создании скриншота/его добавлении')
+
+    def attach_screenshot_element(self, xpath: str) -> None:
+        """
+        Аттачим скриншот конкретного элемента по XPath к аллюру
+        :param xpath: XPath элемента, который нужно заскриншотить
+        :return: None
+        """
+        try:
+            self.logger.info('Скриншотим элемент по XPath и аттачим его к аллюру')
+
+            # Сначала делаем скриншот всей страницы
+            self.__driver.save_screenshot("full_screenshot.png")
+
+            # Находим элемент по XPath
+            element = self.__driver.find_element(By.XPATH, xpath)
+
+            # Получаем размеры и положение элемента
+            location = element.location
+            size = element.size
+
+            # Открываем полное изображение и обрезаем его
+            full_image = Image.open("full_screenshot.png")
+            left = location['x']
+            top = location['y']
+            right = left + size['width']
+            bottom = top + size['height']
+
+            # Обрезаем изображение по координатам элемента
+            element_image = full_image.crop((left, top, right, bottom))
+            element_image.save("element_screenshot.png")
+
+            # Аттачим скриншот элемента к Allure
+            allure.attach.file("element_screenshot.png", name="Element Screenshot",
+                               attachment_type=allure.attachment_type.PNG)
+
+            self.logger.info('Скриншот элемента успешно добавлен')
+        except Exception as e:
+            self.logger.error(f'Произошла ошибка при создании скриншота/его добавлении: {e}')
+
+
 
     def find_element_by_xpath(self, xpath: str):
         """
