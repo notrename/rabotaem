@@ -19,8 +19,8 @@ class GostTeamPage(Page):
         self.open_site(
             url=self.url,
         )
+        self.element_is_visible(self.elems.header())
         self.check_url_contains('gost.team')
-        time.sleep(2)
         self.attach_screenshot()
 
     def go_to_ordering_testing_page(self) -> GostTeamOrderTestingPage:
