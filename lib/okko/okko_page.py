@@ -40,7 +40,9 @@ class OkkoPage(Page):
     def fild(self, xpath=None, value=None):
         self.fild_search_window(xpath=xpath, value=value)
         self.click_element(xpath=xpath)
-        self.click_search_window(xpath=xpath)
+
+    def click_enter_button(self, xpath=None):
+        self.emulate_click_enter_button(xpath=xpath)
 
 
 

@@ -212,10 +212,11 @@ class Page:
         element.send_keys(value)
         return value
 
-    def click_search_window(self, xpath):
+    def emulate_click_enter_button(self, xpath):
         element = self.__driver.find_element(by=By.XPATH, value=xpath)
         time.sleep(1)
         element.send_keys(Keys.ENTER)
+        self.logger.info(f"Эмулируем клик по кнопке ENTER внутри элемента")
         time.sleep(3)
 
     def attach_screenshot(self) -> None:

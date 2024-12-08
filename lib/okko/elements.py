@@ -19,7 +19,7 @@ class Elements(OkkoPage):
         return xpath
 
     @staticmethod
-    def back_after_proceed_subscription_button():
+    def footer_after_proceed_subscription_button():
         xpath = str('//*[@id="root"]/div/div[2]')
         return xpath
 
