@@ -14,7 +14,12 @@ class Elements(OkkoPage):
         return xpath
 
     @staticmethod
-    def back_after_proceed_subscription_button():
+    def header():
+        xpath = str('//header[1]')
+        return xpath
+
+    @staticmethod
+    def footer_after_proceed_subscription_button():
         xpath = str('//*[@id="root"]/div/div[2]')
         return xpath
 

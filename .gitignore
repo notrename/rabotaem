@@ -1,6 +1,7 @@
 *.iml
 *pycache
 *.xml
+*.png
 allure-results
 *.log
 .idea

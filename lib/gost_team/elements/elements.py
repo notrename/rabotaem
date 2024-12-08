@@ -11,3 +11,14 @@ class GostTeamElements:
             by=By.XPATH,
             value=f'//*[contains(text(), "{"заказать тестирование".upper()}")]'
         )
+
+    def header(self):
+        return self.__driver.find_element(
+            by=By.XPATH,
+            value=str('//*[@id="nav709249988"]')
+        )
+
+    @staticmethod
+    def header_xpath():
+        xpath = str('//*[@id="nav709249988"]')
+        return xpath

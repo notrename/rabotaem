@@ -1,5 +1,5 @@
+import os
 import time  ### Этот импорт мне очень нужен чтобы не фейлились некоторые тесты!
-
 import allure
 from selenium.common import InvalidSessionIdException, NoSuchElementException, ElementClickInterceptedException, \
     StaleElementReferenceException, TimeoutException
@@ -10,6 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from utils.logger import Logger
+from PIL import Image
 
 
 class Page:
@@ -211,10 +212,11 @@ class Page:
         element.send_keys(value)
         return value
 
-    def click_search_window(self, xpath):
+    def emulate_click_enter_button(self, xpath):
         element = self.__driver.find_element(by=By.XPATH, value=xpath)
         time.sleep(1)
         element.send_keys(Keys.ENTER)
+        self.logger.info(f"Эмулируем клик по кнопке ENTER внутри элемента")
         time.sleep(3)
 
     def attach_screenshot(self) -> None:
@@ -232,6 +234,56 @@ class Page:
             self.logger.info('Скриншот успешно добавлен')
         except Exception:
             self.logger.info('Произошла ошибка при создании скриншота/его добавлении')
+
+    def attach_screenshot_element(self, xpath: str) -> None:
+        """
+        Аттачим скриншот конкретного элемента по XPath к аллюру
+        :param xpath: XPath элемента, который нужно заскриншотить
+        :return: None
+        """
+        try:
+            self.logger.info('Скриншотим элемент по XPath и аттачим его к аллюру')
+
+            # Сначала делаем скриншот всей страницы
+            self.__driver.save_screenshot("full_screenshot.png")
+
+            # Находим элемент по XPath
+            element = self.__driver.find_element(By.XPATH, xpath)
+
+            # Получаем размеры и положение элемента
+            location = element.location
+            size = element.size
+
+            # Открываем полное изображение и обрезаем его
+            full_image = Image.open("full_screenshot.png")
+            left = location['x']
+            top = location['y']
+            right = left + size['width']
+            bottom = top + size['height']
+
+            # Обрезаем изображение по координатам элемента
+            element_image = full_image.crop((left, top, right, bottom))
+            element_image.save("element_screenshot.png")
+
+            # Аттачим скриншот элемента к Allure
+            allure.attach.file("element_screenshot.png", name="Element Screenshot",
+                               attachment_type=allure.attachment_type.PNG)
+
+            self.logger.info('Скриншот элемента успешно добавлен')
+        except Exception as e:
+            self.logger.error(f'Произошла ошибка при создании скриншота/его добавлении: {e}')
+
+        finally:
+            # Удаляем файлы, если они существуют
+            if os.path.exists("full_screenshot.png"):
+                os.remove("full_screenshot.png")
+                self.logger.info('Удален скриншот всей страницы (из папки с тестами, в атачах он остаётся)')
+
+            if os.path.exists("element_screenshot.png"):
+                os.remove("element_screenshot.png")
+                self.logger.info('Удален скриншот элемента (из папки с тестами, в атачах он остаётся)')
+
+
 
     def find_element_by_xpath(self, xpath: str):
         """

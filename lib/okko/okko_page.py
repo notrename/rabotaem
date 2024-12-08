@@ -2,18 +2,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from utils.page import Page
 
+
 class OkkoPage(Page):
     def __init__(self, driver: WebDriver):
         super().__init__(driver)
 
-    def open_okko_check(self):
+    def open_okko(self):
         url = "https://okko.tv"
         self.open_site(url)
-        return True
-
-    def open_okko(self):
-        url = "https://okko.tv/?clientSessionId=19386d65-b2f9-7aaa-38f0-2f0bedf22974&sso=false"
-        self.open_site(url)
+        self.attach_screenshot()
         return True
 
     def find_element_in_dom_tree(self, xpath=None):
@@ -43,7 +40,9 @@ class OkkoPage(Page):
     def fild(self, xpath=None, value=None):
         self.fild_search_window(xpath=xpath, value=value)
         self.click_element(xpath=xpath)
-        self.click_search_window(xpath=xpath)
+
+    def click_enter_button(self, xpath=None):
+        self.emulate_click_enter_button(xpath=xpath)
 
 
 
