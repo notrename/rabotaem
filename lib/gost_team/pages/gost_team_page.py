@@ -1,3 +1,6 @@
+import time
+from os import times
+
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from lib.gost_team.pages.gost_team_order_testing_page import GostTeamOrderTestingPage
@@ -17,6 +20,7 @@ class GostTeamPage(Page):
             url=self.url,
         )
         self.check_url_contains('gost.team')
+        time.sleep(2)
         self.attach_screenshot()
 
     def go_to_ordering_testing_page(self) -> GostTeamOrderTestingPage:
