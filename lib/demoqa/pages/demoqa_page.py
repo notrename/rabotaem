@@ -22,31 +22,19 @@ class DemoQaPage(Page):
         self.attach_screenshot()
 
     def go_to_checkbox_page(self) -> DemoQaCheckBoxPage:
-        self.elems.element_button().is_displayed()
-        self.elems.element_button().is_enabled()
         self.elems.element_button().click()
-        self.elems.checkbox_button().is_displayed()
-        self.elems.checkbox_button().is_enabled()
         self.elems.checkbox_button().click()
         self.check_url_contains('checkbox')
         return DemoQaCheckBoxPage(driver=self.__driver)
 
     def go_to_uploaddownload_page(self) -> DemoQaUploadDownloadPage:
-        self.elems.element_button().is_displayed()
-        self.elems.element_button().is_enabled()
         self.elems.element_button().click()
-        self.elems.uploaddownload_button().is_displayed()
-        self.elems.uploaddownload_button().is_enabled()
         self.elems.uploaddownload_button().click()
         self.check_url_contains('upload-download')
         return DemoQaUploadDownloadPage(driver=self.__driver)
 
     def go_to_webtables_page(self) -> DemoQaWebtablesPage:
-        self.elems.element_button().is_displayed()
-        self.elems.element_button().is_enabled()
         self.elems.element_button().click()
-        self.elems.webtables_button().is_displayed()
-        self.elems.webtables_button().is_enabled()
         self.elems.webtables_button().click()
         self.check_url_contains('webtables')
         return DemoQaWebtablesPage(driver=self.__driver)

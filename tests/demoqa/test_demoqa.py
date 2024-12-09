@@ -1,7 +1,6 @@
 import allure
 import pytest
 from lib.demoqa.pages.demoqa_page import DemoQaPage
-from lib.demoqa.fixtures import demoqa_page
 
 
 @allure.feature('Тестирование UI DemoQa')
@@ -13,14 +12,33 @@ class TestDemoQaPage:
 
     @allure.story('Открытие страницы')
     def test_open_main_page(self):
-        self.page.open()
-        self.page.attach_screenshot()
+        with allure.step('Открытие страницы'):
+            self.page.open()
+        with allure.step('Делаем скриншот'):
+            self.page.attach_screenshot_element(self.page.elems.header_xpath())
+
 
     def test_go_to_checkbox_page(self):
-        self.page.go_to_checkbox_page()
+        with allure.step('Открытие страницы'):
+            self.page.open()
+        with allure.step('Переход к чекбоксу'):
+            self.page.go_to_checkbox_page()
+        with allure.step('Делаем скриншот'):
+            self.page.attach_screenshot()
+
 
     def test_go_to_uploaddownload_page(self):
-        self.page.go_to_uploaddownload_page()
+        with allure.step('Открытие страницы'):
+            self.page.open()
+        with allure.step('Переход к чекбоксу'):
+            self.page.go_to_uploaddownload_page()
+        with allure.step('Делаем скриншот'):
+            self.page.attach_screenshot()
 
     def test_go_to_webtables_page(self):
-        self.page.go_to_webtables_page()
+        with allure.step('Открытие страницы'):
+            self.page.open()
+        with allure.step('Переход к чекбоксу'):
+            self.page.go_to_webtables_page()
+        with allure.step('Делаем скриншот'):
+            self.page.attach_screenshot()

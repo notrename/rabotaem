@@ -10,3 +10,11 @@ class DemoQaCheckBoxPage(Page):
         self.url = 'https://demoqa.com/checkbox'
         self.__driver = driver
         self.elems = DemoQaCheckBoxElements(driver=driver)
+
+    def open(self):
+        self.open_site(
+            url=self.url,
+        )
+        self.check_url_contains('checkbox')
+
+
