@@ -2,6 +2,7 @@ import os
 from lib.okko.fixturies import *
 from lib.avito.fixtures import *
 from lib.gost_team.fixtures import *
+from lib.demoqa.fixtures import *
 from selenium import webdriver
 
 
