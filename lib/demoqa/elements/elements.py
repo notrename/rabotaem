@@ -1,6 +1,6 @@
-from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from lib.demoqa.demoqa_page import DemoqaPage
+from lib.demoqa.page.demoqa_page import DemoqaPage
+from selenium.webdriver.common.by import By
 
 
 class Elements(DemoqaPage):
@@ -9,5 +9,5 @@ class Elements(DemoqaPage):
 
     @staticmethod
     def header_form():
-        xpath = str('//*[@id="app"]/header')
+        xpath = str('//*[@id="app"]/div/div/div/div[2]/div[2]/h5')
         return xpath
