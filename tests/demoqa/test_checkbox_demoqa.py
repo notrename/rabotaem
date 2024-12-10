@@ -15,9 +15,9 @@ class TestDemoQaPageCheckbox:
         with allure.step('Открытие страницы'):
             self.page.open()
         with allure.step('Делаем скриншот'):
-            self.page.attach_screenshot_element(self.page.elems.header_xpath())
+            self.page.attach_screenshot()
 
-    @allure.story('Проверка раскрывабщегося списка')
+    @allure.story('Проверка раскрывающегося списка')
     def test_dropdown_displays_elements(self):
         with allure.step('Открытие страницы'):
             self.page.open()
@@ -31,3 +31,34 @@ class TestDemoQaPageCheckbox:
         #     self.page.is_visible_dropdown_elements()
         with allure.step('Делаем скриншот'):
             self.page.attach_screenshot()
+
+    @allure.story('Проверка раскрытия всего списка')
+    def test_dropdown_displays_elements(self):
+        with allure.step('Открытие страницы'):
+            self.page.open()
+        with allure.step('Проверка отображения кнопки раскрывающей список'):
+            self.page.element_is_visible(self.page.elems.plus_button)
+        with allure.step('Раскрываем список'):
+            self.page.click_element_by_xpath(self.page.elems.plus_button)
+        with allure.step('Проверяем изменение класса в элементе HTML'):
+            self.page.is_button_plus_changed_list()
+        with allure.step('Проверка присутствия элементов в раскрывающемся списке'):
+            self.page.is_visible_dropdown_elements()
+        with allure.step('Проверка отображения кнопки закрывающей список'):
+            self.page.element_is_visible(self.page.elems.minus_button)
+        with allure.step('Закрываем список'):
+            self.page.click_element_by_xpath(self.page.elems.minus_button)
+        with allure.step('Проверяем изменение класса в элементе HTML'):
+            self.page.is_button_minus_changed_list()
+        with allure.step('Делаем скриншот'):
+            self.page.attach_screenshot()
+
+    #Этот тест чисто для меня, я его потом удалю, я с помощью него проверяю новые методы
+    # @allure.story('Проверка раскрывающегося списка')
+    # def test_dropdown_displays_elements(self):
+    #     with allure.step('Открытие страницы'):
+    #         self.page.open()
+    #     with allure.step('Проверка отображения кнопки раскрывающегося списка'):
+    #         self.page.element_is_visible(self.page.elems.plus_button)
+    #     # with allure.step('Проверяем смену иконки'):
+    #     #     self.page.is_button_plus_changed()
