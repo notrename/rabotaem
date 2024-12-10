@@ -104,7 +104,7 @@ class Page:
     def refresh(self):
         self.__driver.refresh()
 
-    def element_is_visible(self, element, timeout: int = 2) -> bool:
+    def element_is_visible(self, element: object, timeout: int = 2) -> bool:
         """
         Проверка, виден ли элемент на странице в течение заданного времени.
         """
@@ -300,3 +300,6 @@ class Page:
         except NoSuchElementException:
             self.logger(f'Не удалось найти элемент по XPATH={xpath}')
             raise NoSuchElementException(f'Не удалось найти элемент по XPATH={xpath}')
+
+
+        
