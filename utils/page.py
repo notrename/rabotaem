@@ -193,7 +193,6 @@ class Page:
             self.logger.error(f'Элемент {xpath} не найден на странице')
             return False
 
-
     def check_url_contains(self, substring: str, timeout: int = 2) -> bool:
         """Проверяет, содержит ли текущий URL указанный подстроку."""
         self.logger.info(f"Проверяем, что URL содержит подстроку: {substring}")
@@ -283,8 +282,6 @@ class Page:
                 os.remove("element_screenshot.png")
                 self.logger.info('Удален скриншот элемента (из папки с тестами, в атачах он остаётся)')
 
-
-
     def find_element_by_xpath(self, xpath: str):
         """
         Поиск элемента на странице по XPATH
@@ -296,10 +293,7 @@ class Page:
                 by=By.XPATH,
                 value=xpath,
             )
-            self.logger(f'Элемент найден')
+            self.logger.info(f'Элемент найден')
         except NoSuchElementException:
-            self.logger(f'Не удалось найти элемент по XPATH={xpath}')
+            self.logger.error(f'Не удалось найти элемент по XPATH={xpath}')
             raise NoSuchElementException(f'Не удалось найти элемент по XPATH={xpath}')
-
-
-        

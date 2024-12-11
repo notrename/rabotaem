@@ -27,13 +27,13 @@ class TestDemoQaPageCheckbox:
             self.page.click_element_by_xpath(self.page.elems.toggle_button)
         with allure.step('Проверяем смену иконки'):
             self.page.is_button_state_changed()
-        # with allure.step('Проверка присутствия элементов в раскрывающемся списке'):
-        #     self.page.is_visible_dropdown_elements()
+        with allure.step('Проверка присутствия элементов в раскрывающемся списке'):
+            self.page.is_visible_dropdown_elements()
         with allure.step('Делаем скриншот'):
             self.page.attach_screenshot()
 
     @allure.story('Проверка раскрытия всего списка')
-    def test_dropdown_displays_elements(self):
+    def test_dropdown_displays_full_elements(self):
         with allure.step('Открытие страницы'):
             self.page.open()
         with allure.step('Проверка отображения кнопки раскрывающей список'):
