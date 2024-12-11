@@ -1,15 +1,32 @@
 import requests
 
+class Api:
+    @staticmethod
+    def get(url, params=None, headers=None):
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+        return response  # Вернуть объект Response
 
-class API:
+    @staticmethod
+    def post(url, data=None, headers=None):
+        response = requests.post(url, json=data, headers=headers)
+        response.raise_for_status()
+        return response  # Вернуть объект Response
 
-    def send_get(self, url: str, params: dict, success: bool = True) -> dict:
-        # logaem
-        response = requests.get(url=url, params=params)
-        # attachim params, url
-        if success:
-            assert response.status_code in range(200, 204)
-            return response.json()
-        else:
-            assert response.status_code in range(400, 404)
-            return response.json()
+    @staticmethod
+    def put(url, data=None):
+        response = requests.put(url, json=data)
+        response.raise_for_status()
+        return response  # Вернуть объект Response
+
+    @staticmethod
+    def delete(url):
+        response = requests.delete(url)
+        response.raise_for_status()
+        return response.status_code
+
+    @staticmethod
+    def patch(url, data=None):
+        response = requests.patch(url, json=data)
+        response.raise_for_status()
+        return response  # Вернуть объект Response
