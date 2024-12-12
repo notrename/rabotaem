@@ -34,11 +34,3 @@ class TestDemoQaPage:
             self.page.go_to_uploaddownload_page()
         with allure.step('Делаем скриншот'):
             self.page.attach_screenshot()
-
-    def test_go_to_webtables_page(self):
-        with allure.step('Открытие страницы'):
-            self.page.open()
-        with allure.step('Переход к чекбоксу'):
-            self.page.go_to_webtables_page()
-        with allure.step('Делаем скриншот'):
-            self.page.attach_screenshot()

@@ -41,8 +41,8 @@ class TestDemoQaPageCheckbox:
         with allure.step('Проверка отображения кнопки загрузки'):
             self.page.element_is_visible(self.page.elems.upload_button)
         with allure.step('Загрузка файла'):
-            self.page.upload_file_and_check('C:\\Users\\vlad9\PycharmProjects\\rabotaem\\test_img\\sampleFile.jpeg')
+            self.page.upload_file_and_check('C:\\Users\\GT00020\PycharmProjects\\rabotaem\\test_img\\sampleFile.jpeg')
         with allure.step('Проверка отображения строки с файлом'):
             self.page.element_is_visible(self.page.elems.string_upload_file)
         with allure.step('Проверка отображения названия файла в строке'):
-            self.page.check_uploaded_file('C:\\fakepath\\avatar.png')
+            self.page.check_uploaded_file('C:\\fakepath\sampleFile.jpeg')

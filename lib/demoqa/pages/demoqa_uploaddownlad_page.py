@@ -49,6 +49,7 @@ class DemoQaUploadDownloadPage(Page):
         element = self.__driver.find_element(By.XPATH, '//*[@id="uploadedFilePath"]')
         # Получаем текст элемента
         file_path = element.text
+        print(file_path)
         # Проверяем, что текст совпадает с ожидаемым значением
         if file_path == expected_value:
             self.logger.info(f"Строка '{expected_value}' отображается.")
