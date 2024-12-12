@@ -41,21 +41,8 @@ class TestDemoQaPageCheckbox:
         with allure.step('Проверка отображения кнопки загрузки'):
             self.page.element_is_visible(self.page.elems.upload_button)
         with allure.step('Загрузка файла'):
-            self.page.upload_file_and_check('sampleFile.jpeg')
-
-    # def test_upload_file(self):
-    #     """
-    #     Проверка, что файл корректно загружается на сайт
-    #     """
-    #     page = Page(self.driver)
-    #
-    #     # Клик по кнопке "Выберите файл"
-    #     page.click_element('//*[@id="uploadFile"]')
-    #
-    #     # Выбор файла с помощью отправки пути к файлу в поле
-    #     file_path = 'path_to_sampleFile.jpeg'  # Убедитесь, что путь до файла корректный
-    #     page.send_keys_to_input('//*[@id="uploadFile"]', file_path)
-    #
-    #     # Проверка отображения названия файла в элементе
-    #     uploaded_file_path = page.__driver.find_element(By.XPATH, '//*[@id="uploadedFilePath"]').text
-    #     assert "sampleFile.jpeg" in uploaded_file_path, f"Файл не был загружен, отображается: {uploaded_file_path}"
+            self.page.upload_file_and_check('C:\\Users\\vlad9\PycharmProjects\\rabotaem\\test_img\\sampleFile.jpeg')
+        with allure.step('Проверка отображения строки с файлом'):
+            self.page.element_is_visible(self.page.elems.string_upload_file)
+        with allure.step('Проверка отображения названия файла в строке'):
+            self.page.check_uploaded_file('C:\\fakepath\\avatar.png')

@@ -1,7 +1,6 @@
 from selenium.webdriver.remote.webdriver import WebDriver
 from lib.demoqa.pages.demoqa_chekbox_page import DemoQaCheckBoxPage
 from lib.demoqa.pages.demoqa_uploaddownlad_page import DemoQaUploadDownloadPage
-from lib.demoqa.pages.demoqa_webtables_page import DemoQaWebtablesPage
 from utils.page import Page
 from lib.demoqa.elements.demoqa_elements import DemoQaElements
 
@@ -33,8 +32,3 @@ class DemoQaPage(Page):
         self.check_url_contains('upload-download')
         return DemoQaUploadDownloadPage(driver=self.__driver)
 
-    def go_to_webtables_page(self) -> DemoQaWebtablesPage:
-        self.elems.element_button.click()
-        self.elems.webtables_button.click()
-        self.check_url_contains('webtables')
-        return DemoQaWebtablesPage(driver=self.__driver)

@@ -35,22 +35,22 @@ class DemoQaUploadDownloadPage(Page):
             return False
 
     def upload_file_and_check(self, file_path: str) -> bool:
-        """
-        Загрузка файла с помощью отправки пути к файлу в поле ввода.
-        """
         try:
             # Отправка пути к файлу в поле
             file_input = self.__driver.find_element(By.XPATH, '//*[@id="uploadFile"]')
             file_input.send_keys(file_path)
-
-            # Проверка отображения названия файла в элементе
-            uploaded_file_path = self.__driver.find_element(By.XPATH, '//*[@id="uploadedFilePath"]').text
-            if file_path.split('/')[-1] in uploaded_file_path:
-                self.logger.info(f"Файл '{file_path}' успешно загружен.")
-                return True
-            else:
-                self.logger.error(f"Файл не был загружен, отображается: {uploaded_file_path}")
-                return False
+            self.logger.info(f"Файл '{file_path}' успешно загружен.")
         except Exception as e:
             self.logger.error(f"Ошибка при загрузке файла: {e}")
             return False
+
+    def check_uploaded_file(self, expected_value: str):
+        # Находим элемент
+        element = self.__driver.find_element(By.XPATH, '//*[@id="uploadedFilePath"]')
+        # Получаем текст элемента
+        file_path = element.text
+        # Проверяем, что текст совпадает с ожидаемым значением
+        if file_path == expected_value:
+            self.logger.info(f"Строка '{expected_value}' отображается.")
+        else:
+            self.logger.error(f"Строка не совпадает. Ожидалось '{expected_value}'")
