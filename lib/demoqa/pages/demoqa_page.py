@@ -24,11 +24,13 @@ class DemoQaPage(Page):
         self.elems.element_button.click()
         self.elems.checkbox_button.click()
         self.check_url_contains('checkbox')
+        self.attach_screenshot()
         return DemoQaCheckBoxPage(driver=self.__driver)
 
     def go_to_uploaddownload_page(self) -> DemoQaUploadDownloadPage:
         self.elems.element_button.click()
         self.elems.uploaddownload_button.click()
         self.check_url_contains('upload-download')
+        self.attach_screenshot()
         return DemoQaUploadDownloadPage(driver=self.__driver)
 
