@@ -2,12 +2,13 @@ import os
 from lib.okko.fixturies import *
 from lib.avito.fixtures import *
 from lib.gost_team.fixtures import *
+from lib.demoqa.fixtures import *
 from selenium import webdriver
 
 
 @pytest.fixture(scope='function')
 def browser():
-    driver_type = os.getenv('driver_type', 'chromedriver')  # По умолчанию Chrome
+    driver_type = os.getenv('driver_type', 'geckodriver')  # По умолчанию Chrome
 
     if driver_type == 'chromedriver':
         driver = webdriver.Chrome()
